@@ -7,10 +7,20 @@ import sys
 import os
 from pathlib import Path
 
-# Add the app directory to the path for imports
-app_dir = Path(__file__).parent.parent / "app"
-if str(app_dir) not in sys.path:
-    sys.path.insert(0, str(app_dir))
+# Debug: print paths
+_webapp_dir = Path(__file__).parent.resolve()
+_base_dir = _webapp_dir.parent
+_app_dir = _base_dir / "app"
+_db_path = _webapp_dir.parent.parent / "sqlite" / "ecommerce.db"
+
+print(f"DEBUG: __file__ = {__file__}")
+print(f"DEBUG: _webapp_dir = {_webapp_dir}")
+print(f"DEBUG: templates dir = {_webapp_dir / 'templates'}")
+print(f"DEBUG: templates exists = {(_webapp_dir / 'templates').exists()}")
+
+# Add app directory to path for imports
+if str(_app_dir) not in sys.path:
+    sys.path.insert(0, str(_app_dir))
 
 from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse, JSONResponse, PlainTextResponse
@@ -22,16 +32,6 @@ from database import SQLiteConnector
 from sparql import RDFMapper
 
 app = FastAPI(title="E-Commerce RDF Web Interface")
-
-# Use Path consistently for all paths
-_webapp_dir = Path(__file__).parent
-_base_dir = _webapp_dir.parent
-_app_dir = _base_dir / "app"
-_db_path = _webapp_dir.parent.parent / "sqlite" / "ecommerce.db"
-
-# Add app directory to path for imports
-if str(_app_dir) not in sys.path:
-    sys.path.insert(0, str(_app_dir))
 
 # Mount static files and templates
 app.mount("/static", StaticFiles(directory=str(_webapp_dir / "static")), name="static")
