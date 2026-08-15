@@ -7,16 +7,11 @@ import sys
 import os
 from pathlib import Path
 
-# Debug: print paths
+# Use Path consistently for all paths
 _webapp_dir = Path(__file__).parent.resolve()
 _base_dir = _webapp_dir.parent
 _app_dir = _base_dir / "app"
 _db_path = _webapp_dir.parent.parent / "sqlite" / "ecommerce.db"
-
-print(f"DEBUG: __file__ = {__file__}")
-print(f"DEBUG: _webapp_dir = {_webapp_dir}")
-print(f"DEBUG: templates dir = {_webapp_dir / 'templates'}")
-print(f"DEBUG: templates exists = {(_webapp_dir / 'templates').exists()}")
 
 # Add app directory to path for imports
 if str(_app_dir) not in sys.path:
@@ -34,8 +29,11 @@ from sparql import RDFMapper
 app = FastAPI(title="E-Commerce RDF Web Interface")
 
 # Mount static files and templates
-app.mount("/static", StaticFiles(directory=str(_webapp_dir / "static")), name="static")
-templates = Jinja2Templates(directory=str(_webapp_dir / "templates"))
+static_dir = str(_webapp_dir / "static")
+templates_dir = str(_webapp_dir / "templates")
+
+app.mount("/static", StaticFiles(directory=static_dir), name="static")
+templates = Jinja2Templates(directory=templates_dir)
 
 # Initialize mapper
 mapper = None
