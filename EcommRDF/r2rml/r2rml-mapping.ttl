@@ -1,0 +1,189 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sql: <http://insight.ov/csql#> .
+@prefix ecc: <https://example.com/ecommerce#> .
+
+# R2RML Mapping for E-Commerce Database
+# Works with both SQLite and PostgreSQL databases
+
+# Triples Map for Users
+ecc:usersMap
+    a rr:TriplesMap ;
+    rr:logicalTable [ rr:tableName "users" ] ;
+    rr:subjectMap [
+        rr:template "https://example.com/user/{user_id}" ;
+        rr:class ecc:User ;
+        rr:graph <https://example.com/graph/ecommerce>
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ecc:username ;
+        rr:objectMap [ rr:column "username" ]
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ecc:email ;
+        rr:objectMap [ rr:column "email" ; rr:terminalType "URI" ]
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ecc:fullName ;
+        rr:objectMap [ rr:column "full_name" ]
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ecc:createdAt ;
+        rr:objectMap [ rr:column "created_at" ; rr:datatype xsd:date ]
+    ] .
+
+# Triples Map for Categories
+ecc:categoriesMap
+    a rr:TriplesMap ;
+    rr:logicalTable [ rr:tableName "categories" ] ;
+    rr:subjectMap [
+        rr:template "https://example.com/category/{category_id}" ;
+        rr:class ecc:Category ;
+        rr:graph <https://example.com/graph/ecommerce>
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ecc:name ;
+        rr:objectMap [ rr:column "name" ]
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ecc:description ;
+        rr:objectMap [ rr:column "description" ]
+    ] .
+
+# Triples Map for Products
+ecc:productsMap
+    a rr:TriplesMap ;
+    rr:logicalTable [ rr:tableName "products" ] ;
+    rr:subjectMap [
+        rr:template "https://example.com/product/{product_id}" ;
+        rr:class ecc:Product ;
+        rr:graph <https://example.com/graph/ecommerce>
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ecc:productName ;
+        rr:objectMap [ rr:column "name" ]
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ecc:productDescription ;
+        rr:objectMap [ rr:column "description" ]
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ecc:price ;
+        rr:objectMap [ rr:column "price" ; rr:datatype xsd:decimal ]
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ecc:stockQuantity ;
+        rr:objectMap [ rr:column "stock_quantity" ; rr:datatype xsd:integer ]
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ecc:averageRating ;
+        rr:objectMap [ rr:column "average_rating" ; rr:datatype xsd:decimal ]
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ecc:belongsToCategory ;
+        rr:objectMap [
+            rr:template "https://example.com/category/{category_id}"
+        ]
+    ] .
+
+# Triples Map for Orders
+ecc:ordersMap
+    a rr:TriplesMap ;
+    rr:logicalTable [ rr:tableName "orders" ] ;
+    rr:subjectMap [
+        rr:template "https://example.com/order/{order_id}" ;
+        rr:class ecc:Order ;
+        rr:graph <https://example.com/graph/ecommerce>
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ecc:orderDate ;
+        rr:objectMap [ rr:column "order_date" ; rr:datatype xsd:date ]
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ecc:shipDate ;
+        rr:objectMap [ rr:column "ship_date" ; rr:datatype xsd:date ]
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ecc:status ;
+        rr:objectMap [ rr:column "status" ]
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ecc:totalAmount ;
+        rr:objectMap [ rr:column "total_amount" ; rr:datatype xsd:decimal ]
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ecc:placedByUser ;
+        rr:objectMap [
+            rr:template "https://example.com/user/{user_id}"
+        ]
+    ] .
+
+# Triples Map for Order Items
+ecc:orderItemsMap
+    a rr:TriplesMap ;
+    rr:logicalTable [ rr:tableName "order_items" ] ;
+    rr:subjectMap [
+        rr:template "https://example.com/orderItem/{item_id}" ;
+        rr:class ecc:OrderItem ;
+        rr:graph <https://example.com/graph/ecommerce>
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ecc:itemNumber ;
+        rr:objectMap [ rr:column "order_item_number" ; rr:datatype xsd:integer ]
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ecc:quantity ;
+        rr:objectMap [ rr:column "quantity" ; rr:datatype xsd:integer ]
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ecc:unitPrice ;
+        rr:objectMap [ rr:column "unit_price" ; rr:datatype xsd:decimal ]
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ecc:partOfOrder ;
+        rr:objectMap [
+            rr:template "https://example.com/order/{order_id}"
+        ]
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ecc:referencesProduct ;
+        rr:objectMap [
+            rr:template "https://example.com/product/{product_id}"
+        ]
+    ] .
+
+# Triples Map for Reviews
+ecc:reviewsMap
+    a rr:TriplesMap ;
+    rr:logicalTable [ rr:tableName "reviews" ] ;
+    rr:subjectMap [
+        rr:template "https://example.com/review/{review_id}" ;
+        rr:class ecc:Review ;
+        rr:graph <https://example.com/graph/ecommerce>
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ecc:rating ;
+        rr:objectMap [ rr:column "rating" ; rr:datatype xsd:integer ]
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ecc:comment ;
+        rr:objectMap [ rr:column "comment" ]
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ecc:reviewDate ;
+        rr:objectMap [ rr:column "created_at" ; rr:datatype xsd:date ]
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ecc:reviewedBy ;
+        rr:objectMap [
+            rr:template "https://example.com/user/{user_id}"
+        ]
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ecc:reviewsProduct ;
+        rr:objectMap [
+            rr:template "https://example.com/product/{product_id}"
+        ]
+    ] .

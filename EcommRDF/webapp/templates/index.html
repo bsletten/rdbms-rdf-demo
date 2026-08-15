@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce SPARQL Explorer</title>
+    <script src="https://unpkg.com/htmx.org@1.9.6"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { padding: 20px; }
+        .query-result { background: #f8f9fa; padding: 15px; border-radius: 5px; }
+        .uri { font-family: monospace; color: #0d6efd; }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <h1>E-Commerce SPARQL Explorer</h1>
+        <p class="lead">Query the e-commerce database as RDF</p>
+        
+        <!-- Query Builder -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <strong>Build Query</strong>
+            </div>
+            <div class="card-body">
+                <form id="queryForm">
+                    <div class="mb-3">
+                        <label for="queryType" class="form-label">Query Type:</label>
+                        <select class="form-select" id="queryType" hx-change="loadQueryTemplate" hx-target="#queryInput">
+                            <option value="users">List Users</option>
+                            <option value="products">List Products</option>
+                            <option value="orders">List Orders</option>
+                            <option value="reviews">List Reviews</option>
+                            <option value="custom">Custom Query</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <textarea class="form-control" id="queryInput" rows="8" placeholder="Enter SPARQL query..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" hx-post="/query" hx-target="#results" hx-swap="innerHTML">
+                        Execute Query
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="clearResults()">Clear</button>
+                    <select class="form-select d-inline w-auto ms-3" id="formatSelect">
+                        <option value="json" selected>JSON</option>
+                        <option value="turtle">Turtle</option>
+                        <option value="json-ld">JSON-LD</option>
+                        <option value="xml">XML</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div id="results"></div>
+    </div>
+
+    <script>
+        // Load query templates
+        const templates = {
+            users: `PREFIX ecc: <https://example.com/ecommerce#>
+SELECT ?user ?username ?email ?fullName
+WHERE {
+    ?user a ecc:User ;
+          ecc:username ?username ;
+          ecc:email ?email ;
+          ecc:fullName ?fullName .
+}`,
+            products: `PREFIX ecc: <https://example.com/ecommerce#>
+SELECT ?product ?name ?price ?category
+WHERE {
+    ?product a ecc:Product ;
+             ecc:productName ?name ;
+             ecc:price ?price ;
+             ecc:belongsToCategory ?cat .
+    ?cat ecc:name ?category .
+}`,
+            orders: `PREFIX ecc: <https://example.com/ecommerce#>
+SELECT ?order ?date ?status ?total
+WHERE {
+    ?order a ecc:Order ;
+           ecc:orderDate ?date ;
+           ecc:status ?status ;
+           ecc:totalAmount ?total .
+} ORDER BY DESC(?date)`,
+            reviews: `PREFIX ecc: <https://example.com/ecommerce#>
+SELECT ?review ?rating ?comment ?productName
+WHERE {
+    ?review a ecc:Review ;
+            ecc:rating ?rating ;
+            ecc:comment ?comment ;
+            ecc:reviewsProduct ?product .
+    ?product ecc:productName ?productName .
+}`
+        };
+
+        function loadQueryTemplate() {
+            const type = document.getElementById('queryType').value;
+            const textarea = document.getElementById('queryInput');
+            if (type === 'custom') {
+                textarea.value = '';
+            } else {
+                textarea.value = templates[type] || '';
+            }
+        }
+
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+            document.getElementById('queryInput').value = '';
+        }
+
+        // Initial template load
+        document.addEventListener('DOMContentLoaded', loadQueryTemplate);
+
+        // Format change handler
+        document.getElementById('formatSelect').addEventListener('change', function() {
+            const format = this.value;
+            const form = document.getElementById('queryForm');
+            const url = new URL('/query', window.location.origin);
+            url.searchParams.set('format', format);
+            
+            // For demo purposes, show the format that would be used
+            console.log(`Format set to: ${format}`);
+        });
+    </script>
+</body>
+</html>

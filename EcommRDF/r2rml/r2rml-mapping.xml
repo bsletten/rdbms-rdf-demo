@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  R2RML Mapping for E-Commerce Database (XML format)
+  Works with both SQLite and PostgreSQL databases
+-->
+<R2RML:TriplesMap xmlns:R2RML="http://www.w3.org/ns/r2rml#"
+                  xmlns:rr="http://www.w3.org/ns/r2rml#"
+                  xmlns:ecc="https://example.com/ecommerce#"
+                  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+
+  <!-- Users Triples Map -->
+  <R2RML:TriplesMap>
+    <R2RML:logicalTable>
+      <R2RML:tableName>users</R2RML:tableName>
+    </R2RML:logicalTable>
+    <R2RML:subjectMap rr:class="ecc:User" rr:template="https://example.com/user/{user_id}"/>
+    <R2RML:predicateObjectMap>
+      <R2RML:predicate>ecc:username</R2RML:predicate>
+      <R2RML:objectMap rr:column="username"/>
+    </R2RML:predicateObjectMap>
+    <R2RML:predicateObjectMap>
+      <R2RML:predicate>ecc:email</R2RML:predicate>
+      <R2RML:objectMap rr:column="email" rr:terminalType="URI"/>
+    </R2RML:predicateObjectMap>
+    <R2RML:predicateObjectMap>
+      <R2RML:predicate>ecc:fullName</R2RML:predicate>
+      <R2RML:objectMap rr:column="full_name"/>
+    </R2RML:predicateObjectMap>
+    <R2RML:predicateObjectMap>
+      <R2RML:predicate>ecc:createdAt</R2RML:predicate>
+      <R2RML:objectMap rr:column="created_at" rr:datatype="xsd:date"/>
+    </R2RML:predicateObjectMap>
+  </R2RML:TriplesMap>
+
+  <!-- Categories Triples Map -->
+  <R2RML:TriplesMap>
+    <R2RML:logicalTable>
+      <R2RML:tableName>categories</R2RML:tableName>
+    </R2RML:logicalTable>
+    <R2RML:subjectMap rr:class="ecc:Category" rr:template="https://example.com/category/{category_id}"/>
+    <R2RML:predicateObjectMap>
+      <R2RML:predicate>ecc:name</R2RML:predicate>
+      <R2RML:objectMap rr:column="name"/>
+    </R2RML:predicateObjectMap>
+    <R2RML:predicateObjectMap>
+      <R2RML:predicate>ecc:description</R2RML:predicate>
+      <R2RML:objectMap rr:column="description"/>
+    </R2RML:predicateObjectMap>
+  </R2RplesMap>
+
+  <!-- Products Triples Map -->
+  <R2RML:TriplesMap>
+    <R2RML:logicalTable>
+      <R2RML:tableName>products</R2RML:tableName>
+    </R2RML:logicalTable>
+    <R2RML:subjectMap rr:class="ecc:Product" rr:template="https://example.com/product/{product_id}"/>
+    <R2RML:predicateObjectMap>
+      <R2RML:predicate>ecc:productName</R2RML:predicate>
+      <R2RML:objectMap rr:column="name"/>
+    </R2RML:predicateObjectMap>
+    <R2RML:predicateObjectMap>
+      <R2RML:predicate>ecc:productDescription</R2RML:predicate>
+      <R2RML:objectMap rr:column="description"/>
+    </R2RML:predicateObjectMap>
+    <R2RML:predicateObjectMap>
+      <R2RML:predicate>ecc:price</R2RML:predicate>
+      <R2RML:objectMap rr:column="price" rr:datatype="xsd:decimal"/>
+    </R2RML:predicateObjectMap>
+    <R2RML:predicateObjectMap>
+      <R2RML:predicate>ecc:stockQuantity</R2RML:predicate>
+      <R2RML:objectMap rr:column="stock_quantity" rr:datatype="xsd:integer"/>
+    </R2RML:predicateObjectMap>
+    <R2RML:predicateObjectMap>
+      <R2RML:predicate>ecc:averageRating</R2RML:predicate>
+      <R2RML:objectMap rr:column="average_rating" rr:datatype="xsd:decimal"/>
+    </R2RML:predicateObjectMap>
+    <R2RML:predicateObjectMap>
+      <R2RML:predicate>ecc:belongsToCategory</R2RML:predicate>
+      <R2RML:objectMap rr:template="https://example.com/category/{category_id}"/>
+    </R2RML:predicateObjectMap>
+  </R2RML:TriplesMap>
+
+  <!-- Orders Triples Map -->
+  <R2RML:TriplesMap>
+    <R2RML:logicalTable>
+      <R2RML:tableName>orders</R2RML:tableName>
+    </R2RML:logicalTable>
+    <R2RML:subjectMap rr:class="ecc:Order" rr:template="https://example.com/order/{order_id}"/>
+    <R2RML:predicateObjectMap>
+      <R2RML:predicate>ecc:orderDate</R2RML:predicate>
+      <R2RML:objectMap rr:column="order_date" rr:datatype="xsd:date"/>
+    </R2RML:predicateObjectMap>
+    <R2RML:predicateObjectMap>
+      <R2RML:predicate>ecc:shipDate</R2RML:predicate>
+      <R2RML:objectMap rr:column="ship_date" rr:datatype="xsd:date"/>
+    </R2RML:predicateObjectMap>
+    <R2RML:predicateObjectMap>
+      <R2RML:predicate>ecc:status</R2RML:predicate>
+      <R2RML:objectMap rr:column="status"/>
+    </R2RML:predicateObjectMap>
+    <R2RML:predicateObjectMap>
+      <R2RML:predicate>ecc:totalAmount</R2RML:predicate>
+      <R2RML:objectMap rr:column="total_amount" rr:datatype="xsd:decimal"/>
+    </R2RML:predicateObjectMap>
+    <R2RML:predicateObjectMap>
+      <R2RML:predicate>ecc:placedByUser</R2RML:predicate>
+      <R2RML:objectMap rr:template="https://example.com/user/{user_id}"/>
+    </R2RML:predicateObjectMap>
+  </R2RML:TriplesMap>
+
+  <!-- Order Items Triples Map -->
+  <R2RML:TriplesMap>
+    <R2RML:logicalTable>
+      <R2RML:tableName>order_items</R2RML:tableName>
+    </R2RML:logicalTable>
+    <R2RML:subjectMap rr:class="ecc:OrderItem" rr:template="https://example.com/orderItem/{item_id}"/>
+    <R2RML:predicateObjectMap>
+      <R2RML:predicate>ecc:itemNumber</R2RML:predicate>
+      <R2RML:objectMap rr:column="order_item_number" rr:datatype="xsd:integer"/>
+    </R2RML:predicateObjectMap>
+    <R2RML:predicateObjectMap>
+      <R2RML:predicate>ecc:quantity</R2RML:predicate>
+      <R2RML:objectMap rr:column="quantity" rr:datatype="xsd:integer"/>
+    </R2RML:predicateObjectMap>
+    <R2RML:predicateObjectMap>
+      <R2RML:predicate>ecc:unitPrice</R2RML:predicate>
+      <R2RML:objectMap rr:column="unit_price" rr:datatype="xsd:decimal"/>
+    </R2RML:predicateObjectMap>
+    <R2RML:predicateObjectMap>
+      <R2RML:predicate>ecc:partOfOrder</R2RML:predicate>
+      <R2RML:objectMap rr:template="https://example.com/order/{order_id}"/>
+    </R2RML:predicateObjectMap>
+    <R2RML:predicateObjectMap>
+      <R2RML:predicate>ecc:referencesProduct</R2RML:predicate>
+      <R2RML:objectMap rr:template="https://example.com/product/{product_id}"/>
+    </R2RML:predicateObjectMap>
+  </R2RML:TriplesMap>
+
+  <!-- Reviews Triples Map -->
+  <R2RML:TriplesMap>
+    <R2RML:logicalTable>
+      <R2RML:tableName>reviews</R2RML:tableName>
+    </R2RML:logicalTable>
+    <R2RML:subjectMap rr:class="ecc:Review" rr:template="https://example.com/review/{review_id}"/>
+    <R2RML:predicateObjectMap>
+      <R2RML:predicate>ecc:rating</R2RML:predicate>
+      <R2RML:objectMap rr:column="rating" rr:datatype="xsd:integer"/>
+    </R2RML:predicateObjectMap>
+    <R2RML:predicateObjectMap>
+      <R2RML:predicate>ecc:comment</R2RML:predicate>
+      <R2RML:objectMap rr:column="comment"/>
+    </R2RML:predicateObjectMap>
+    <R2RML:predicateObjectMap>
+      <R2RML:predicate>ecc:reviewDate</R2RML:predicate>
+      <R2RML:objectMap rr:column="created_at" rr:datatype="xsd:date"/>
+    </R2RML:predicateObjectMap>
+    <R2RML:predicateObjectMap>
+      <R2RML:predicate>ecc:reviewedBy</R2RML:predicate>
+      <R2RML:objectMap rr:template="https://example.com/user/{user_id}"/>
+    </R2RML:predicateObjectMap>
+    <R2RML:predicateObjectMap>
+      <R2RML:predicate>ecc:reviewsProduct</R2RML:predicate>
+      <R2RML:objectMap rr:template="https://example.com/product/{product_id}"/>
+    </R2RML:predicateObjectMap>
+  </R2RML:TriplesMap>
+
+</R2RML:TriplesMap>

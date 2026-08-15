@@ -1,0 +1,241 @@
+@prefix ecc: <https://example.com/ecommerce#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+# E-commerce Vocabulary Terms
+# Defines classes and properties for the e-commerce domain
+
+ecc:User
+    a rdfs:Class ;
+    rdfs:label "User" ;
+    rdfs:comment "A customer or user of the e-commerce system" .
+
+ecc:Category
+    a rdfs:Class ;
+    rdfs:label "Category" ;
+    rdfs:comment "A product category" .
+
+ecc:Product
+    a rdfs:Class ;
+    rdfs:label "Product" ;
+    rdfs:comment "An item available for purchase" .
+
+ecc:Order
+    a rdfs:Class ;
+    rdfs:label "Order" ;
+    rdfs:comment "A customer order" .
+
+ecc:OrderItem
+    a rdfs:Class ;
+    rdfs:label "Order Item" ;
+    rdfs:comment "A line item within an order" .
+
+ecc:Review
+    a rdfs:Class ;
+    rdfs:label "Review" ;
+    rdfs:comment "A product review by a user" .
+
+# User properties
+ecc:username
+    a rdf:Property ;
+    rdfs:domain ecc:User ;
+    rdfs:range xsd:string ;
+    rdfs:label "username" .
+
+ecc:email
+    a rdf:Property ;
+    rdfs:domain ecc:User ;
+    rdfs:range xsd:string ;
+    rdfs:label "email" .
+
+ecc:fullName
+    a rdf:Property ;
+    rdfs:domain ecc:User ;
+    rdfs:range xsd:string ;
+    rdfs:label "full name" .
+
+ecc:createdAt
+    a rdf:Property ;
+    rdfs:domain ecc:User ;
+    rdfs:range xsd:date ;
+    rdfs:label "created at" .
+
+ecc:hasReview
+    a rdf:Property ;
+    rdfs:domain ecc:User ;
+    rdfs:range ecc:Review ;
+    rdfs:label "has review" .
+
+ecc:hasOrder
+    a rdf:Property ;
+    rdfs:domain ecc:User ;
+    rdfs:range ecc:Order ;
+    rdfs:label "has order" .
+
+# Category properties
+ecc:name
+    a rdf:Property ;
+    rdfs:domain ecc:Category ;
+    rdfs:range xsd:string ;
+    rdfs:label "name" .
+
+ecc:description
+    a rdf:Property ;
+    rdfs:domain ecc:Category ;
+    rdfs:range xsd:string ;
+    rdfs:label "description" .
+
+ecc:hasProduct
+    a rdf:Property ;
+    rdfs:domain ecc:Category ;
+    rdfs:range ecc:Product ;
+    rdfs:label "has product" .
+
+# Product properties
+ecc:productName
+    a rdf:Property ;
+    rdfs:domain ecc:Product ;
+    rdfs:range xsd:string ;
+    rdfs:label "product name" .
+
+ecc:productDescription
+    a rdf:Property ;
+    rdfs:domain ecc:Product ;
+    rdfs:range xsd:string ;
+    rdfs:label "product description" .
+
+ecc:price
+    a rdf:Property ;
+    rdfs:domain ecc:Product ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "price" .
+
+ecc:stockQuantity
+    a rdf:Property ;
+    rdfs:domain ecc:Product ;
+    rdfs:range xsd:integer ;
+    rdfs:label "stock quantity" .
+
+ecc:averageRating
+    a rdf:Property ;
+    rdfs:domain ecc:Product ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "average rating" .
+
+ecc:belongsToCategory
+    a rdf:Property ;
+    rdfs:domain ecc:Product ;
+    rdfs:range ecc:Category ;
+    rdfs:label "belongs to category" .
+
+ecc:hasReview
+    a rdf:Property ;
+    rdfs:domain ecc:Product ;
+    rdfs:range ecc:Review ;
+    rdfs:label "has review" .
+
+ecc:inOrder
+    a rdf:Property ;
+    rdfs:domain ecc:Product ;
+    rdfs:range ecc:Order ;
+    rdfs:label "in order" .
+
+# Order properties
+ecc:orderDate
+    a rdf:Property ;
+    rdfs:domain ecc:Order ;
+    rdfs:range xsd:date ;
+    rdfs:label "order date" .
+
+ecc:shipDate
+    a rdf:Property ;
+    rdfs:domain ecc:Order ;
+    rdfs:range xsd:date ;
+    rdfs:label "ship date" .
+
+ecc:status
+    a rdf:Property ;
+    rdfs:domain ecc:Order ;
+    rdfs:range xsd:string ;
+    rdfs:label "status" .
+
+ecc:totalAmount
+    a rdf:Property ;
+    rdfs:domain ecc:Order ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "total amount" .
+
+ecc:containsItem
+    a rdf:Property ;
+    rdfs:domain ecc:Order ;
+    rdfs:range ecc:OrderItem ;
+    rdfs:label "contains item" .
+
+ecc:placedByUser
+    a rdf:Property ;
+    rdfs:domain ecc:Order ;
+    rdfs:range ecc:User ;
+    rdfs:label "placed by user" .
+
+# Order Item properties
+ecc:quantity
+    a rdf:Property ;
+    rdfs:domain ecc:OrderItem ;
+    rdfs:range xsd:integer ;
+    rdfs:label "quantity" .
+
+ecc:unitPrice
+    a rdf:Property ;
+    rdfs:domain ecc:OrderItem ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "unit price" .
+
+ecc:itemNumber
+    a rdf:Property ;
+    rdfs:domain ecc:OrderItem ;
+    rdfs:range xsd:integer ;
+    rdfs:label "item number" .
+
+ecc:referencesProduct
+    a rdf:Property ;
+    rdfs:domain ecc:OrderItem ;
+    rdfs:range ecc:Product ;
+    rdfs:label "references product" .
+
+ecc:partOfOrder
+    a rdf:Property ;
+    rdfs:domain ecc:OrderItem ;
+    rdfs:range ecc:Order ;
+    rdfs:label "part of order" .
+
+# Review properties
+ecc:rating
+    a rdf:Property ;
+    rdfs:domain ecc:Review ;
+    rdfs:range xsd:integer ;
+    rdfs:label "rating" .
+
+ecc:comment
+    a rdf:Property ;
+    rdfs:domain ecc:Review ;
+    rdfs:range xsd:string ;
+    rdfs:label "comment" .
+
+ecc:reviewDate
+    a rdf:Property ;
+    rdfs:domain ecc:Review ;
+    rdfs:range xsd:date ;
+    rdfs:label "review date" .
+
+ecc:reviewedBy
+    a rdf:Property ;
+    rdfs:domain ecc:Review ;
+    rdfs:range ecc:User ;
+    rdfs:label "reviewed by user" .
+
+ecc:reviewsProduct
+    a rdf:Property ;
+    rdfs:domain ecc:Review ;
+    rdfs:range ecc:Product ;
+    rdfs:label "reviews product" .
