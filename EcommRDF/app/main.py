@@ -12,6 +12,8 @@ from database import SQLiteConnector
 from sparql import RDFMapper, SPARQLServer, ECC
 from rdflib import Graph
 
+import os
+from pathlib import Path
 
 app = FastAPI(
     title="E-Commerce SPARQL Endpoint",
@@ -20,9 +22,13 @@ app = FastAPI(
 )
 
 
+# Determine database path relative to this script
+SCRIPT_DIR = Path(__file__).parent
+# From EcommRDF/app/ to sqlite/ at root level
+DB_PATH = SCRIPT_DIR.parent.parent / "sqlite" / "ecommerce.db"
+
 # Initialize mapper and server
-db_path = "/Users/brian/hermes/src/sqlite/ecommerce.db"
-mapper = RDFMapper(SQLiteConnector(db_path))
+mapper = RDFMapper(SQLiteConnector(str(DB_PATH)))
 server = SPARQLServer(mapper)
 
 
