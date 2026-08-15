@@ -3,12 +3,20 @@ Web frontend for SPARQL endpoint using HTMX.
 Provides an interactive query interface.
 """
 
+import sys
+import os
+from pathlib import Path
+
+# Add the app directory to the path for imports
+app_dir = Path(__file__).parent.parent / "app"
+if str(app_dir) not in sys.path:
+    sys.path.insert(0, str(app_dir))
+
 from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
-import os
 
 from database import SQLiteConnector
 from sparql import RDFMapper
@@ -23,8 +31,9 @@ webapp_dir = os.path.join(base_dir, "webapp")
 app.mount("/static", StaticFiles(directory=os.path.join(webapp_dir, "static")), name="static")
 templates = Jinja2Templates(directory=os.path.join(webapp_dir, "templates"))
 
-# Initialize mapper
-db_path = "/Users/brian/hermes/src/sqlite/ecommerce.db"
+# Initialize mapper - resolve database relative to webapp location
+SCRIPT_DIR = Path(__file__).parent
+DB_PATH = SCRIPT_DIR.parent.parent / "sqlite" / "ecommerce.db"
 mapper = None
 
 
@@ -37,7 +46,7 @@ class QueryRequest(BaseModel):
 async def load_graph():
     """Load the RDF graph on startup."""
     global mapper
-    mapper = RDFMapper(SQLiteConnector(db_path))
+    mapper = RDFMapper(SQLiteConnector(str(DB_PATH)))
     mapper.map_all()
 
 
