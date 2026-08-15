@@ -13,7 +13,7 @@ if str(app_dir) not in sys.path:
     sys.path.insert(0, str(app_dir))
 
 from fastapi import FastAPI, Request, Form
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
@@ -23,17 +23,21 @@ from sparql import RDFMapper
 
 app = FastAPI(title="E-Commerce RDF Web Interface")
 
-# Get paths
-base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-webapp_dir = os.path.join(base_dir, "webapp")
+# Use Path consistently for all paths
+_webapp_dir = Path(__file__).parent
+_base_dir = _webapp_dir.parent
+_app_dir = _base_dir / "app"
+_db_path = _webapp_dir.parent.parent / "sqlite" / "ecommerce.db"
+
+# Add app directory to path for imports
+if str(_app_dir) not in sys.path:
+    sys.path.insert(0, str(_app_dir))
 
 # Mount static files and templates
-app.mount("/static", StaticFiles(directory=os.path.join(webapp_dir, "static")), name="static")
-templates = Jinja2Templates(directory=os.path.join(webapp_dir, "templates"))
+app.mount("/static", StaticFiles(directory=str(_webapp_dir / "static")), name="static")
+templates = Jinja2Templates(directory=str(_webapp_dir / "templates"))
 
-# Initialize mapper - resolve database relative to webapp location
-SCRIPT_DIR = Path(__file__).parent
-DB_PATH = SCRIPT_DIR.parent.parent / "sqlite" / "ecommerce.db"
+# Initialize mapper
 mapper = None
 
 
@@ -46,7 +50,7 @@ class QueryRequest(BaseModel):
 async def load_graph():
     """Load the RDF graph on startup."""
     global mapper
-    mapper = RDFMapper(SQLiteConnector(str(DB_PATH)))
+    mapper = RDFMapper(SQLiteConnector(str(_db_path)))
     mapper.map_all()
 
 
@@ -74,10 +78,8 @@ async def query_endpoint(
         if 'error' in results and isinstance(results, dict):
             return {"error": results['error']}
         
-        # Get the output in the requested format
         output = mapper.to_format(results, format)
         
-        # Return as HTML response for browser rendering
         content_type = {
             'json': 'application/sparql-results+json',
             'json-ld': 'application/ld+json',
@@ -124,6 +126,15 @@ async def api_query(query: str, format: str = "json"):
 async def sparql_endpoint(query: str, format: str = "json"):
     """SPARQL endpoint URL."""
     return await api_query(query, format)
+
+
+@app.get("/graph")
+async def get_graph(format: str = "turtle"):
+    """Get the full RDF graph."""
+    global mapper
+    if not mapper:
+        return {"error": "Graph not loaded"}
+    return PlainTextResponse(mapper.graph.serialize(format=format))
 
 
 if __name__ == "__main__":
